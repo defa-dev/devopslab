@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/defa-dev/devopslab.svg?branch=main)](https://travis-ci.com/defa-dev/devopslab)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=defa-dev&metric=alert_status)](https://sonarcloud.io/dashboard?id=defa-dev)
 
 ## Laboratório DevOps
 
