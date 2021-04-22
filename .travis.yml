@@ -1,48 +1,55 @@
-# Linguagem Utilizada para Desenvolver a Aplicação                                                                                                                                                       
-language: python                                                                                                                                                                                         
+# Linguagem Utilizada para Desenvolver a Aplicação
+language: python
 
-# Versão que a aplicação suporta.                                                                                                                                                                        
-python:                                                                                                                                                                                                  
-  - "3.7.9"                                                                                                                                                                                              
+# Versão que a aplicação suporta.
+python:
+    - "3.7.9"
 
 os: linux
 dist: xenial
 
 jobs:
-  include:
-    - stage: Build
+    include:
+        - stage: Testes
 
-      name: "Testes Unitarios"
-      # Instalação de Módulos que são necessários para a Aplicação.
-      install:
-        - pip install flask flask-wtf coverage
-      script:  # Defini o script de Teste que deve rodar toda vez que o código for alterado.
-        - coverage run test.py || travis_terminate 1;
-        - coverage report app.py || travis_terminate 1;
-        - coverage xml app.py || travis_terminate 1;
+          name: "Testes Unitarios"
+          # Instalação de Módulos que são necessários para a Aplicação.
+          install:
+              - pip install flask flask-wtf coverage
+          script: # Defini o script de Teste que deve rodar toda vez que o código for alterado.
+              - coverage run test.py || travis_terminate 1;
+              - coverage report app.py || travis_terminate 1;
+              - coverage xml app.py || travis_terminate 1;
 
-    - script:
-        - sonar-scanner || travis_terminate 1;
-      name: "Testes de Qualidade e Seguranca"
-      addons:
-        sonarcloud:
-          organization: defa-dev
-          token: ${SONAR_TOKEN}
+          workspaces:
+              create:
+              name: coverage
+              paths:
+                  - coverage.xml
 
-    - stage: Deploy
-      script: skip
-      # Definir o Deploy no Heroku
-      deploy:
-        provider: heroku
-        strategy: api
-        api_key: $HEROKU_API_KEY
-        edge: true
-        app: devopslab-felipe
-        on:
-          branch: main
+        - script:
+              - sonar-scanner || travis_terminate 1;
+          workspaces:
+              use: coverage
+          name: "Testes de Qualidade e Seguranca"
+          addons:
+              sonarcloud:
+                  organization: defa-dev
+                  token: ${SONAR_TOKEN}
 
-     #Slack
+        - stage: Deploy
+          script: skip
+          # Definir o Deploy no Heroku
+          deploy:
+              provider: heroku
+              strategy: api
+              api_key: $HEROKU_API_KEY
+              edge: true
+              app: devopslab-felipe
+              on:
+                  branch: main
+          #Slack
 #notifications:
-#  slack: defateamworkspace:TOKEN REMOVIDO 
+#  slack: defateamworkspace:TOKEN REMOVIDO
 #  on_success: always
 #  on_failure: always
