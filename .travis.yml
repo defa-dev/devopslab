@@ -37,7 +37,7 @@ deploy:
       branch: main
 
       #Slack
-notifications:
-  slack: defateamworkspace:EE33ZWJJpzYOQpB5hZbyEc3V 
-  on_success: always
-  on_failure: always
+#notifications:
+#  slack: defateamworkspace:TOKEN REMOVIDO 
+#  on_success: always
+#  on_failure: always
