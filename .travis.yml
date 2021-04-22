@@ -34,4 +34,10 @@ deploy:
   edge: true 
   app: devopslab-felipe
   on:
-      branch: main 
+      branch: main
+
+      #Slack
+notifications:
+  slack: defateamworkspace:EE33ZWJJpzYOQpB5hZbyEc3V 
+  on_success: always
+  on_failure: always
