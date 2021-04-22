@@ -1,42 +1,47 @@
 # Linguagem Utilizada para Desenvolver a Aplicação                                                                                                                                                       
-language: python
-os: linux
-                                                                                                                                                                                                         
+language: python                                                                                                                                                                                         
+
 # Versão que a aplicação suporta.                                                                                                                                                                        
-dist: xenial
 python:                                                                                                                                                                                                  
   - "3.7.9"                                                                                                                                                                                              
-                                                                                                                                                                                                         
-# Instalação de Módulos que são necessários para a Aplicação.                                                                                                                                            
-install:                                                                                                                                                                                                 
-  - pip install flask
-  - pip install flask flask-wtf 
-  - pip install flask flask-wtf coverage
-   
- #Addon Travis
-addons:
-  sonarcloud:
-    organization: defa-dev
-    token: ${SONAR_TOKEN}
 
-   # Defini o script de Teste que deve rodar toda vez que o código for alterado.
-script:                                                  
-   - coverage report app.py || travis_terminate 1;
-   - coverage run test.py || travis_terminate 1;
-   - coverage xml app.py || travis_terminate 1;
-   - sonar-scanner || travis_terminate 1;
-  
-   # Definir o Deploy no Heroku
-deploy:
-  strategy: api
-  provider: heroku
-  api_key: $HEROKU_API_KEY
-  edge: true 
-  app: devopslab-felipe
-  on:
-      branch: main
+os: linux
+dist: xenial
 
-      #Slack
+jobs:
+  include:
+    - stage: Build
+
+      name: "Testes Unitarios"
+      # Instalação de Módulos que são necessários para a Aplicação.
+      install:
+        - pip install flask flask-wtf coverage
+      script:  # Defini o script de Teste que deve rodar toda vez que o código for alterado.
+        - coverage run test.py || travis_terminate 1;
+        - coverage report app.py || travis_terminate 1;
+        - coverage xml app.py || travis_terminate 1;
+
+    - script:
+        - sonar-scanner || travis_terminate 1;
+      name: "Testes de Qualidade e Seguranca"
+      addons:
+        sonarcloud:
+          organization: defa-dev
+          token: ${SONAR_TOKEN}
+
+    - stage: Deploy
+      script: skip
+      # Definir o Deploy no Heroku
+      deploy:
+        provider: heroku
+        strategy: api
+        api_key: $HEROKU_API_KEY
+        edge: true
+        app: devopslab-felipe
+        on:
+          branch: main
+
+     #Slack
 #notifications:
 #  slack: defateamworkspace:TOKEN REMOVIDO 
 #  on_success: always
