@@ -26,7 +26,8 @@ jobs:
               name: coverage
               paths:
                   - coverage.xml
-
+              
+          #Aplica testes do Sonar  
         - stage: "Teste de Segurança"
           name: "Testes de Qualidade e Segurança" 
           workspaces:
