@@ -27,12 +27,12 @@ jobs:
               paths:
                   - coverage.xml
 
-        - stage: "Teste de Segurança" 
+        - stage: "Teste de Segurança"
+          name: "Testes de Qualidade e Segurança" 
           script:
             - sonar-scanner || travis_terminate 1;
           workspaces:
-            use: coverage
-          name: "Testes de Qualidade e Seguranca"
+            use: coverage       
           addons:
               sonarcloud:
                   organization: defa-dev
@@ -74,4 +74,3 @@ jobs:
 #  slack: defateamworkspace:TOKEN REMOVIDO
 #  on_success: always
 #  on_failure: always
-          
