@@ -37,7 +37,23 @@ jobs:
                   organization: defa-dev
                   token: ${SONAR_TOKEN}
 
-        - stage: Deploy
+        - stage: STG Deploy
+          script: skip
+          # Definir o Deploy no Heroku
+          deploy:
+              provider: heroku
+              strategy: api
+              api_key: $HEROKU_API_KEY
+              edge: true
+              app: devopslab-felipe-stg
+              on:
+                  branch: main
+
+        - stage: STG Teste
+          script:
+              - curl https://devopslab-felipe-stg.herokuapp.com/ | grep Hello || travis_terminate 1;
+
+        - stage: PROD Deploy
           script: skip
           # Definir o Deploy no Heroku
           deploy:
@@ -48,6 +64,10 @@ jobs:
               app: devopslab-felipe
               on:
                   branch: main
+
+        - stage: PROD Teste
+          script:
+              - curl https://devopslab-felipe.herokuapp.com/ | grep Hello || travis_terminate 1;
           #Slack
 #notifications:
 #  slack: defateamworkspace:TOKEN REMOVIDO
